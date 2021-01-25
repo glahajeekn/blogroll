@@ -1,0 +1,80 @@
+name: CC的部落格友链截图
+on: 
+  schedule:
+    - cron: '0 16 * * *'  
+  push:
+    branches: 
+      - master
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
+    steps:
+    - name: 检查分支
+      uses: actions/checkout@main
+      
+    - name: 安装Node
+      uses: actions/setup-node@main
+      with:
+        node-version: "12.x"
+    
+    - name: 缓存依赖
+      uses: actions/cache@main
+      id: cache-dependencies
+      with:
+        path: node_modules
+        key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}
+
+    - name: 安装依赖
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: |
+        npm install imagemin imagemin-webp
+
+    - name: 安装Python
+      uses: actions/setup-python@main
+      with:
+        python-version: 3.8
+        
+    - name: 安装 requests
+      run: pip install requests
+    
+    - name: 新建文件夹
+      run: |
+        mkdir jpg
+
+    - name: 执行
+      run: python blogroll.py
+      
+    - name: 压缩图片为webp
+      run: |
+        node imagemin.js
+
+    - name: 更新友链截图
+      run: |
+        cd ./webp
+        git init
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add -A
+        git commit -m "${{ github.event.head_commit.message }} $(date +"%Z %Y-%m-%d %A %H:%M:%S") Updated By Github Actions"
+        git push --force --quiet "https://ccknbc:${{ secrets.GH_TOKEN }}@github.com/ccknbc-actions/blogroll.git" master:webp
+
+    - name: 刷新jsd缓存
+      run: curl https://purge.jsdelivr.net/gh/ccknbc-actions/blogroll@webp/
+
+    - name: Delete Workflow Runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 1
+
+    - name: Telegram Notification
+      if: cancelled() == false
+      uses: xinthink/action-telegram@v1.1
+      with:
+        botToken: ${{ secrets.TG_BOT_TOKEN }} #use bot @BotFather
+        chatId: ${{ secrets.TG_CHAT_ID }} #use bot @userinfobot
+        jobStatus: ${{ job.status }}
+        skipSuccess: false
