@@ -48,7 +48,7 @@ def downloadFriends(url_prefix="https://image.thum.io/get/width/400/crop/800/all
 
 
 if __name__ == '__main__':
-    getLinkFriends("https://ccknbc.now.sh/blogroll/")
-    getGiteeFriends("ccknbc", "blogroll")
+    getLinkFriends("https://blog.slqwq.cn/link/")
+    getGiteeFriends("slqwq", "Friends")
     downloadFriends("https://2s9e3bif52.execute-api.eu-central-1.amazonaws.com/production/screenshot?url=")
 
