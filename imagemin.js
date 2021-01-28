@@ -7,11 +7,11 @@ const imageminWebp = require('imagemin-webp');
 		plugins: [
 			imageminWebp(
 				{
-					quality: 80,
+					quality: 95,
 					method: 6
 				}
 				)
 		]
 	});
-	console.log('图片已按照画质的80%压缩为webp格式');
+	console.log('图片已按照画质的95%压缩为webp格式');
 })();
