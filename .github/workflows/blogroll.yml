@@ -1,7 +1,8 @@
 name: Hajeekn Blog友链截图
-on: 
+on:
   schedule:
-    - cron: '0 16 * * *'  
+    - cron: '0 16 * * *' 
+    - push
   push:
     branches: 
       - master
