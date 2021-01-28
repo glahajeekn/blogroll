@@ -2,7 +2,6 @@ name: Hajeekn Blog友链截图
 on:
   schedule:
     - cron: '0 16 * * *' 
-    - push
   push:
     branches: 
       - master
