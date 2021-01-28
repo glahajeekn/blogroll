@@ -1,4 +1,4 @@
-name: CC的部落格友链截图
+name: Hajeekn Blog友链截图
 on: 
   schedule:
     - cron: '0 16 * * *'  
@@ -59,10 +59,10 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add -A
         git commit -m "${{ github.event.head_commit.message }} $(date +"%Z %Y-%m-%d %A %H:%M:%S") Updated By Github Actions"
-        git push --force --quiet "https://ccknbc:${{ secrets.GH_TOKEN }}@github.com/ccknbc-actions/blogroll.git" master:webp
+        git push --force --quiet "https://ccknbc:${{ secrets.GH_TOKEN }}@github.com/ladjeek-actions/blogroll.git" master:webp
 
     - name: 刷新jsd缓存
-      run: curl https://purge.jsdelivr.net/gh/ccknbc-actions/blogroll@webp/
+      run: curl https://purge.jsdelivr.net/gh/ladjeek-actions/blogroll@webp/
 
     - name: Delete Workflow Runs
       uses: Mattraks/delete-workflow-runs@main
@@ -76,5 +76,4 @@ jobs:
       with:
         botToken: ${{ secrets.TG_BOT_TOKEN }} #use bot @BotFather
         chatId: ${{ secrets.TG_CHAT_ID }} #use bot @userinfobot
-        jobStatus: ${{ job.status }}
         skipSuccess: false
